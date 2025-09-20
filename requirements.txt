@@ -1,0 +1,2 @@
+﻿numpy==0.0.0
+pytest
