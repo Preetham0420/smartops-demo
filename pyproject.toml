@@ -1,0 +1,4 @@
+@'
+[tool.pytest.ini_options]
+pythonpath = ["."]
+'@ | Set-Content -NoNewline -Encoding UTF8 pyproject.toml
