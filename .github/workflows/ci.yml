@@ -1,9 +1,10 @@
-New-Item -ItemType Directory -Force ".github\workflows" | Out-Null
-@'
-name: CI
+﻿name: CI
 on:
+  workflow_dispatch:
   push:
+    branches: [ "main" ]
   pull_request:
+    branches: [ "main" ]
 
 jobs:
   test:
@@ -19,4 +20,3 @@ jobs:
           pip install -r requirements.txt
       - name: Run tests
         run: pytest -q
-'@ | Set-Content -NoNewline -Encoding UTF8 .github\workflows\ci.yml
