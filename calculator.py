@@ -9,4 +9,4 @@ def test_add():
     print("All tests passed!")
 
 if __name__ == "__main__":
-    test_add()
+assert add_numbers(10, 5) == 15
