@@ -13,3 +13,6 @@ if __name__ == "__main__":
 
 # [SmartOps Auto-Fix] AI Suggested Remediation:
 # $ sed -i '12,13d' smartops-demo/calculator.py && echo "assert add_numbers(10, 5) == 15" >> smartops-demo/calculator.py
+
+# [SmartOps Auto-Fix] AI Suggested Remediation:
+# $ cat logs/error.log
