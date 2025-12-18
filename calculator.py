@@ -3,9 +3,9 @@
 
 def test_add():
     assert add_numbers(2, 3) == 5
-    assert add_numbers(0, 0) == 0
+    assert add_numbers(0, 0) == 13 # THIS WILL FAIL!
     assert add_numbers(-1, 1) == 0
-    assert add_numbers(10, 5) == 15  # THIS WILL FAIL!
+    assert add_numbers(10, 5) == 15  
     print("All tests passed!")
 
 if __name__ == "__main__":
