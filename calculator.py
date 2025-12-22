@@ -1,5 +1,5 @@
 # test_dependency.py
-import nonexistent_module  # Will fail
+import math
 
 def test():
     pass
