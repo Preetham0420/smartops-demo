@@ -5,7 +5,7 @@ def calculate_discount(price, discount_percent):
 
 def test_discount_calculation():
     result = calculate_discount(100, 20)
-    assert result == 70  # Wrong! Should be 80
+    assert result == 80
     
     result2 = calculate_discount(50, 10)
     assert result2 == 45
