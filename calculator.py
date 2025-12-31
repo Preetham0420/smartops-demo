@@ -1,6 +1,5 @@
-# test_syntax.py
-def test():
-if True:
-        print("test")
-if __name__ == "__main__":
-    test()
+# test_single_indent.py
+
+def greet(name):
+    print("Hello")
+        print(name)
