@@ -1,7 +1,7 @@
 # test_multi_errors.py
 
 def calculate(a, b):
-    result = a + float(str(b))
+    result = a + float(str(b).replace(',', ''))
         print("Result:", result)
     return result
 
