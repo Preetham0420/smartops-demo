@@ -2,14 +2,14 @@
 
 def calculate(a, b):
     result = a + b
-        print("Result:", result)
+print("Result:", result)
     return result
 
 
 def divide(a, b):
     if b == 0:
         return None
-     return a / b
+    return a / b
 
 
 def main():
