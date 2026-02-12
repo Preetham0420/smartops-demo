@@ -15,7 +15,7 @@ def process_data(data):
     results = []
     for item in data:
         if item > 0:
-        squared = item ** 2
+            squared = item ** 2
             doubled = item * 2  # ERROR: Wrong indent (should be 12 spaces to be inside if)
             results.append(squared + doubled)  # ERROR: Extra indent (should be 12 spaces)
     
