@@ -1,6 +1,6 @@
 # test_logic.py - 5 logic/runtime errors
 
-import non_existent_module  # ImportError
+import math
 
 def calculate_discount(price, discount):
     final_price = price - (price * dicount / 100)  # NameError: typo in 'discount'
