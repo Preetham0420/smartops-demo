@@ -2,13 +2,13 @@
 
 def get_average(numbers):
     if not numbers:
-    return 0
+        return 0
     
     total = 0
     for n in numbers:
         total += n
-            result = total / len(numbers)
-    return result
+        result = total / len(numbers)
+        return result
 
 
 def find_max(items):
@@ -17,6 +17,6 @@ def find_max(items):
     
     current_max = items[0]
     for item in items:
-    if item > current_max:
+        if item > current_max:
             current_max = item
     return current_max
