@@ -1,22 +1,29 @@
-# test_syntax.py - 5 syntax/indentation errors
+# test_logic.py - 5 logic/runtime errors
 
-def get_average(numbers):
-    if not numbers:
-        return 0
-    
-    total = 0
-    for n in numbers:
-        total += n
-        result = total / len(numbers)
-        return result
+import non_existent_module  # ImportError
+
+def calculate_discount(price, discount):
+    final_price = price - (price * dicount / 100)  # NameError: typo in 'discount'
+    return final_price
 
 
-def find_max(items):
-    if len(items) == 0:
-        return None
-    
-    current_max = items[0]
-    for item in items:
-        if item > current_max:
-            current_max = item
-    return current_max
+def process_user(user_dict):
+    name = user_dict["name"]
+    age = user_dict["age"]
+    return name + age  # TypeError: can't concatenate str and int
+
+
+def test_addition():
+    result = 2 + 2
+    assert result == 5, "Math is broken"  # AssertionError
+
+
+def get_item(items, index):
+    return items[index]  # Potential IndexError if index out of range
+
+
+# This will fail at runtime
+if __name__ == "__main__":
+    print(calculate_discount(100, 20))
+    print(process_user({"name": "John", "age": 30}))
+    test_addition()
