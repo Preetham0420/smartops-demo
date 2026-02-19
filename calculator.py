@@ -1,21 +1,21 @@
 # test_logic.py - 5 logic/runtime errors
 
-import non_existent_module  # ImportError
+# import non_existent_module  # ImportError  # REMOVED: module not found
 
 def calculate_discount(price, discount):
-    final_price = price - (price * dicount / 100)  # NameError: typo in 'discount'
+    final_price = price - (price * discount / 100)  # NameError: typo in 'discount'
     return final_price
 
 
 def process_user(user_dict):
     name = user_dict["name"]
     age = user_dict["age"]
-    return name + age  # TypeError: can't concatenate str and int
+    return name + str(age)  # TypeError: can't concatenate str and int
 
 
 def test_addition():
     result = 2 + 2
-    assert result == 5, "Math is broken"  # AssertionError
+    assert result == 4, "Math is broken"  # AssertionError
 
 
 def get_item(items, index):
