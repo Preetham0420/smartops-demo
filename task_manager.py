@@ -111,10 +111,16 @@ def parse_user_age(age_string):
         return int(age_string)  # ERROR 13: ValueError — no validation for non-numeric input
     except (ValueError, TypeError):
         return None  # Could not convert age_string to int
+        return int(age_string)  # ERROR 13: ValueError — no validation for non-numeric input
+    except (ValueError, TypeError):
+        return None  # Could not convert age_string to int
 
 
 def calculate_average_score(scores):
-    """Calculate average from scores list."""
+    try:
+        return total / count  # Potential ZeroDivisionError if empty list
+    except ZeroDivisionError:
+        pass  # Handle division by zero
     total = sum(scores)
     count = len(scores)
     try:
