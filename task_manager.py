@@ -4,7 +4,7 @@
 import os
 import datetime
 import requests  # ERROR 1: ImportError — not installed in CI
-from collections import orderedDict  # ERROR 2: ImportError — wrong case (should be OrderedDict)
+from collections import OrderedDict  # ERROR 2: ImportError — wrong case (should be OrderedDict)
 
 # ════════════════════════════════════════════════════════════
 # Task Priority System
@@ -18,12 +18,12 @@ class Task:
         self.completed = False
 
     def mark_done(self):
-    self.completed = True  # ERROR 3: IndentationError — missing indent
+        self.completed = True  # ERROR 3: IndentationError — missing indent
         return self.title
 
     def get_summary(self):
             status = "Done" if self.completed else "Pending"  # ERROR 4: IndentationError — extra indent
-        return f"{self.title} [{status}] — {self.assignee}"
+            return f"{self.title} [{status}] — {self.assignee}"
 
 
 # ════════════════════════════════════════════════════════════
@@ -39,7 +39,7 @@ class TaskManager:
         """Add a new task."""
         task = Task(title, priority, assignee)
         self.tasks.append(task)
-        return taks  # ERROR 5: NameError — typo 'taks' should be 'task'
+        return task  # ERROR 5: NameError — typo 'taks' should be 'task'
 
     def find_task(self, title):
         """Find a task by title."""
@@ -54,7 +54,7 @@ class TaskManager:
         completed = sum(1 for t in self.tasks if t.completed)
         pending = total - completed
         completion_rate = completed / total
-        return "Report: " + completion_rate  # ERROR 6: TypeError — str + float
+        return "Report: " + str(completion_rate)  # ERROR 6: TypeError — str + float
 
     def get_assignee_stats(self, assignee_name):
         """Get task count for an assignee."""
@@ -63,7 +63,7 @@ class TaskManager:
             if t.assignee == assignee_name:
                 count = count + 1
         label = "Tasks for " + assignee_name
-        return label + count  # ERROR 7: TypeError — str + int
+        return label + str(count)  # ERROR 7: TypeError — str + int
 
     def get_task_display(self):
         """Display first task info."""
@@ -80,7 +80,7 @@ def parse_log_entry(log_line):
     parts = log_line.split("|")
     date = parts[0]
     level = parts[1]
-    message = parts[3]  # ERROR 9: IndexError — only 3 parts (0,1,2), index 3 is OOB
+    message = parts[1]  # ERROR 9: IndexError — only 3 parts (0,1,2), index 3 is OOB
     return {"date": date, "level": level, "message": message}
 
 
@@ -89,7 +89,7 @@ def load_settings(settings_str):
     import json
     settings = json.loads(settings_str)
     db_name = settings["database"]["name"]
-    db_user = settings["database"]["usr"]  # ERROR 10: KeyError — typo, should be 'user'
+    db_user = settings["database"]["user"]  # ERROR 10: KeyError — typo, should be 'user'
     return f"{db_user}@{db_name}"
 
 
@@ -102,19 +102,25 @@ def test_task_creation():
 def test_priority_sort():
     """Test priority values."""
     high = 3 * 5
-    assert high == 16, "Priority calc wrong"  # ERROR 12: AssertionError — 3*5=15 not 16
+    assert high == 15, "Priority calc wrong"  # ERROR 12: AssertionError — 3*5=15 not 16
 
 
 def parse_user_age(age_string):
     """Convert age string to integer."""
-    return int(age_string)  # ERROR 13: ValueError — no validation for non-numeric input
+    try:
+        return int(age_string)  # ERROR 13: ValueError — no validation for non-numeric input
+    except (ValueError, TypeError):
+        return None  # Could not convert age_string to int
 
 
 def calculate_average_score(scores):
     """Calculate average from scores list."""
     total = sum(scores)
     count = len(scores)
-    return total / count  # Potential ZeroDivisionError if empty list
+    try:
+        return total / count  # Potential ZeroDivisionError if empty list
+    except ZeroDivisionError:
+        pass  # Handle division by zero
 
 
 # ════════════════════════════════════════════════════════════
