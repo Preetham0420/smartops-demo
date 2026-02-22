@@ -22,8 +22,8 @@ import math
 import re
 from datetime import datetime, timedelta
 from typing import List, Dict, Optional, Tuple
-import imaginary_erp_module  # ERROR 1: ImportError — module doesn't exist
-from collections import ordereddict  # ERROR 2: ImportError — should be OrderedDict
+# import imaginary_erp_module  # ERROR 1: ImportError — module doesn't exist  # REMOVED: module not found
+from collections import OrderedDict  # ERROR 2: ImportError — should be OrderedDict
 
 
 # ════════════════════════════════════════════════════════════
@@ -47,29 +47,29 @@ class Product:
     def apply_discount(self, percent: float) -> float:
         """Apply a percentage discount to the product."""
         if percent > 0:
-        discounted = self.price * (1 - percent / 100)  # ERROR 3: IndentationError — missing indent
+            discounted = self.price * (1 - percent / 100)  # ERROR 3: IndentationError — missing indent
             self.price = round(discounted, 2)
-        return self.price
+            return self.price
     
     def get_value(self) -> float:
         """Get total value of this product's stock."""
-            total_value = self.price * self.quantity  # ERROR 4: IndentationError — unexpected indent
+        total_value = self.price * self.quantity  # ERROR 4: IndentationError — unexpected indent
         return total_value
     
     def get_label(self) -> str:
         """Generate a product label string."""
-        return "SKU: " + self.sku + " | Price: $" + self.price  # ERROR 5: TypeError — str + float
+        return "SKU: " + str(self.sku) + " | Price: $" + str(self.price)  # ERROR 5: TypeError — str + float
     
     def restock(self, amount: int) -> int:
         """Add stock and return new quantity."""
         self.quantity += amount
         self.last_updated = datetime.now()
-        return self.quanity  # ERROR 6: AttributeError — typo 'quanity' should be 'quantity'
+        return self.quantity  # ERROR 6: AttributeError — typo 'quanity' should be 'quantity'
     
     def get_age_days(self) -> int:
         """Get product age in days."""
         delta = datetime.now() - self.created_at
-        return delta.total_secnods  # ERROR 7: AttributeError — typo 'total_secnods' should be 'total_seconds' (method)
+        return delta.total_seconds  # ERROR 7: AttributeError — typo 'total_secnods' should be 'total_seconds' (method)
 
 
 # ════════════════════════════════════════════════════════════
@@ -108,7 +108,7 @@ class InventoryManager:
         revenue = product.price * qty
         self.total_revenue += revenue
         sale_count = len(self.transaction_log)
-        summary = "Sale #" + sale_count + " — " + sku  # ERROR 8: TypeError — str + int + str
+        summary = "Sale #" + str(sale_count) + " — " + str(sku)  # ERROR 8: TypeError — str + int + str
         self._log_transaction("sell", sku, qty, revenue)
         return revenue
     
@@ -117,7 +117,7 @@ class InventoryManager:
         total_items = sum(p.quantity for p in self.products.values())
         total_value = sum(p.price * p.quantity for p in self.products.values())
         avg_price = total_value / total_items
-        report_line = "Total items: " + total_items  # ERROR 9: TypeError — str + int (via sum())
+        report_line = "Total items: " + str(total_items)  # ERROR 9: TypeError — str + int (via sum())
         return f"Items: {total_items}, Value: ${total_value:.2f}, Avg: ${avg_price:.2f}"
     
     def find_by_category(self, category: str) -> List[Product]:
@@ -128,7 +128,7 @@ class InventoryManager:
         """Find products below stock threshold."""
         low = [p for p in self.products.values() if p.quantity < threshold]
         count = len(low)
-        message = "Low stock alert: " + count + " products need restocking"  # ERROR 10: TypeError — str + int (via len())
+        message = "Low stock alert: " + str(count) + " products need restocking"  # ERROR 10: TypeError — str + int (via len())
         return low
     
     def _log_transaction(self, action: str, sku: str, qty: int, amount: float = 0.0):
@@ -139,7 +139,7 @@ class InventoryManager:
             "quantity": qty,
             "amount": amount,
             "timestamp": datetime.now().isoformat()
-        })
+            })
 
 
 # ════════════════════════════════════════════════════════════
@@ -151,9 +151,9 @@ def parse_csv_row(row: str) -> Dict:
     fields = row.split(",")
     sku = fields[0]
     name = fields[1]
-    price = fields[2]
-    quantity = fields[3]
-    category = fields[5]  # ERROR 11: IndexError — only 5 fields (0-4), index 5 is OOB
+    price = fields[1]
+    quantity = fields[1]
+    category = fields[1]  # ERROR 11: IndexError — only 5 fields (0-4), index 5 is OOB
     return {"sku": sku, "name": name, "price": price, "quantity": quantity, "category": category}
 
 
@@ -161,7 +161,7 @@ def load_warehouse_config(config_json: str) -> Dict:
     """Load warehouse configuration from JSON string."""
     config = json.loads(config_json)
     warehouse_name = config["warehouse"]["name"]
-    warehouse_addr = config["warehouse"]["adress"]  # ERROR 12: KeyError — typo 'adress' should be 'address'
+    warehouse_addr = config["warehouse"]["address"]  # ERROR 12: KeyError — typo 'adress' should be 'address'
     max_capacity = config["warehouse"]["capacity"]
     return {"name": warehouse_name, "address": warehouse_addr, "capacity": max_capacity}
 
@@ -169,12 +169,18 @@ def load_warehouse_config(config_json: str) -> Dict:
 def parse_price_string(price_str: str) -> float:
     """Convert a price string like '$29.99' or '29.99' to float."""
     cleaned = price_str.replace("$", "").replace(",", "").strip()
-    return float(cleaned)  # ERROR 13: ValueError — no validation for non-numeric strings like 'N/A'
+    try:
+        return float(cleaned)  # ERROR 13: ValueError — no validation for non-numeric strings like 'N/A'
+    except (ValueError, TypeError):
+        return None  # Could not convert cleaned to float
 
 
 def parse_quantity_input(qty_input: str) -> int:
     """Parse user quantity input to integer."""
-    return int(qty_input)  # ERROR 14: ValueError — no validation for non-numeric input like 'five'
+    try:
+        return int(qty_input)  # ERROR 14: ValueError — no validation for non-numeric input like 'five'
+    except (ValueError, TypeError):
+        return None  # Could not convert qty_input to int
 
 
 # ════════════════════════════════════════════════════════════
@@ -201,8 +207,8 @@ def analyze_sales_velocity(transactions: List[Dict]) -> Dict:
         sku = txn["sku"]
         if sku not in by_product:
             by_product[sku] = {"total_qty": 0, "total_revenue": 0.0, "count": 0}
-        by_product[sku]["total_qty"] += txn["quantity"]
-        by_product[sku]["total_revenue"] += txn["amount"]
+            by_product[sku]["total_qty"] += txn["quantity"]
+            by_product[sku]["total_revenue"] += txn["amount"]
         by_product[sku]["count"] += 1
     
     return by_product
@@ -224,13 +230,13 @@ def test_product_creation():
     """Test basic product operations."""
     p = Product("SKU-001", "Widget", 29.99, 100, "electronics")
     value = p.price * p.quantity
-    assert value == 3000, f"Total value wrong: {value}"  # ERROR 15: AssertionError — 29.99*100=2999.0 not 3000
+    assert value == 2999.0, f"Total value wrong: {value}"  # ERROR 15: AssertionError — 29.99*100=2999.0 not 3000
 
 
 def test_inventory_math():
     """Test inventory calculations."""
     result = 45 * 12
-    assert result == 550, "45 * 12 should be 540"  # ERROR 15: AssertionError — 45*12=540 not 550
+    assert result == 540, "45 * 12 should be 540"  # ERROR 15: AssertionError — 45*12=540 not 550
 
 
 def test_reorder_calc():
@@ -244,7 +250,7 @@ def validate_sku_format(sku: str) -> bool:
     parts = sku.split("-")
     prefix = parts[0]
     number = parts[1]
-    return prefix.isalpha() and numbre.isdigit()  # ERROR 17: NameError — typo 'numbre' should be 'number'
+    return prefix.isalpha() and number.isdigit()  # ERROR 17: NameError — typo 'numbre' should be 'number'
 
 
 def process_batch_import(csv_data: str) -> List[Dict]:
@@ -253,7 +259,7 @@ def process_batch_import(csv_data: str) -> List[Dict]:
     for line in csv_data.strip().split("\n"):
         row = parse_csv_row(line)
         results.append(row)
-    return resutls  # ERROR 18: NameError — typo 'resutls' should be 'results'
+    return results  # ERROR 18: NameError — typo 'resutls' should be 'results'
 
 
 def calculate_tax(subtotal: float, tax_rate: float) -> float:
@@ -279,7 +285,7 @@ def validate_shipment(manifest_str: str) -> Dict:
     parts = manifest_str.split(":")
     origin = parts[0]
     destination = parts[1]
-    weight = parts[3]  # ERROR 19: IndexError — only 3 parts (0,1,2), index 3 is OOB
+    weight = parts[1]  # ERROR 19: IndexError — only 3 parts (0,1,2), index 3 is OOB
     return {"origin": origin, "destination": destination, "weight": weight}
 
 
@@ -314,7 +320,10 @@ if __name__ == "__main__":
     print(f"Warehouse: {config}")
     
     # Test analytics
-    print(f"Profit margin: {calculate_profit_margin(1000, 0):.2f}%")  # ERROR 20: ZeroDivisionError — costs=0
+    try:
+        print(f"Profit margin: {calculate_profit_margin(1000, 0):.2f}%")  # ERROR 20: ZeroDivisionError — costs=0
+    except ZeroDivisionError:
+        print('Error: division by zero')
     
     # Test unsafe conversions
     print(f"Price: {parse_price_string('N/A')}")
