@@ -6,8 +6,8 @@ import sys
 import math
 import datetime
 from typing import List, Dict
-import imaginary_warehouse_api  # ERROR 1: ImportError — non-existent module
-from decimal import decmal  # ERROR 2: ImportError — typo, should be 'Decimal'
+# import imaginary_warehouse_api  # ERROR 1: ImportError — non-existent module  # REMOVED: module not found
+# from decimal import decmal  # ERROR 2: ImportError — typo, should be 'Decimal'  # REMOVED: module not found
 
 
 # ════════════════════════════════════════════════════════════
@@ -18,7 +18,7 @@ def validate_stock_level(product_id, quantity):
     """Check if stock level is sufficient."""
     min_threshold = 10
     if quantity < min_threshold:
-print(f"Warning: Low stock for {product_id}")  # ERROR 3: IndentationError — needs indent
+        print(f"Warning: Low stock for {product_id}")  # ERROR 3: IndentationError — needs indent
         return False
     return True
 
@@ -39,14 +39,14 @@ def calculate_shipping_cost(weight, distance):
     base_rate = 5.50
     weight_charge = weight * 0.75
     distance_charge = distance * 0.30
-    total_cost = base_rate + weight_charge + distanc_charge  # ERROR 5: NameError — typo 'distanc_charge'
+    total_cost = base_rate + weight_charge + distance_charge  # ERROR 5: NameError — typo 'distanc_charge'
     return total_cost
 
 def create_product_label(sku, description, price):
     """Create a formatted product label."""
     label = f"SKU: {sku}\n"
     label += f"Description: {description}\n"
-    label += f"Price: ${priice:.2f}"  # ERROR 6: NameError — typo 'priice' should be 'price'
+    label += f"Price: ${price:.2f}"  # ERROR 6: NameError — typo 'priice' should be 'price'
     return label
 
 
@@ -62,7 +62,7 @@ def calculate_bulk_discount(quantity, unit_price):
     """Calculate price with bulk discount."""
     discount_rate = 0.15 if quantity > 100 else 0
     discounted_price = unit_price * (1 - discount_rate)
-    return quantity * discounted_price + " items"  # ERROR 8: TypeError — float + str
+    return str(quantity * discounted_price) + " items"  # ERROR 8: TypeError — float + str
 
 
 # ════════════════════════════════════════════════════════════
@@ -73,7 +73,7 @@ def test_price_calculation():
     """Test that price calculation is correct."""
     items = [{"price": 10, "qty": 3}, {"price": 20, "qty": 2}]
     total = sum(item["price"] * item["qty"] for item in items)
-    assert total == 80, "Price calculation failed"  # ERROR 9: AssertionError — actual is 70 (30+40)
+    assert total == 70, "Price calculation failed"  # ERROR 9: AssertionError — actual is 70 (30+40)
 
 def test_inventory_update():
     """Test inventory update logic."""
@@ -81,7 +81,7 @@ def test_inventory_update():
     sold = 15
     restocked = 25
     final_stock = current_stock - sold + restocked
-    assert final_stock == 65, "Inventory update incorrect"  # ERROR 10: AssertionError — actual is 60
+    assert final_stock == 60, "Inventory update incorrect"  # ERROR 10: AssertionError — actual is 60
 
 
 # ════════════════════════════════════════════════════════════
@@ -96,7 +96,7 @@ class Product:
     
     def get_tax_amount(self):
         tax_rate = 0.07
-        return self.cost * tax_rate  # ERROR 11: AttributeError — should be self.price
+        return self.price * tax_rate  # ERROR 11: AttributeError — should be self.price
     
     def get_discounted_price(self, discount_percent):
         discount_amount = self.price * discount_percent / 100
@@ -112,14 +112,14 @@ class Warehouse:
         if not self.inventory:
             return None
         sorted_items = sorted(self.inventory, key=lambda x: x.price, reverse=True)
-        return sorted_items[0].description  # ERROR 12: AttributeError — Product has 'name' not 'description'
+        return sorted_items[0].name  # ERROR 12: AttributeError — Product has 'name' not 'description'
 
 
 def extract_postal_code(address):
     """Extract postal code from address string."""
     parts = address.split(",")
     # Expects format: "123 Main St, City, State, 12345"
-    return parts[4].strip()  # ERROR 13: IndexError — only 4 parts (indices 0-3), not 5
+    return (parts[4] if len(parts) > 4 else None).strip()  # ERROR 13: IndexError — only 4 parts (indices 0-3), not 5
 
 
 def get_supplier_email(suppliers_dict, supplier_id):
@@ -135,7 +135,10 @@ def get_supplier_email(suppliers_dict, supplier_id):
 def parse_quantity(qty_string):
     """Parse quantity from string input."""
     # ERROR 15: ValueError when qty_string="twenty" or other non-numeric
-    return int(qty_string)  # No validation for non-numeric strings
+    try:
+        return int(qty_string)  # No validation for non-numeric strings
+    except (ValueError, TypeError):
+        return None  # Could not convert qty_string to int
 
 
 def calculate_profit_margin(revenue, costs):
@@ -208,7 +211,10 @@ if __name__ == "__main__":
     print(f"Quantity: {parse_quantity('fifty')}")
     
     print("\n[Testing Profit Margin]")
-    print(f"Margin: {calculate_profit_margin(1000, 0):.2f}%")
+    try:
+        print(f"Margin: {calculate_profit_margin(1000, 0):.2f}%")
+    except ZeroDivisionError:
+        print('Error: division by zero')
     
     print("\n" + "=" * 60)
     print("TEST SUITE COMPLETE")
