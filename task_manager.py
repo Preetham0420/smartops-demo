@@ -80,7 +80,7 @@ def parse_log_entry(log_line):
     parts = log_line.split("|")
     date = parts[0]
     level = parts[1]
-    message = (parts[3] if len(parts) > 3 else None)  # ERROR 9: IndexError — only 3 parts (0,1,2), index 3 is OOB
+    message = ((parts[3] if len(parts) > 3 else None) if len(parts) > 3 else None)  # ERROR 9: IndexError — only 3 parts (0,1,2), index 3 is OOB
     return {"date": date, "level": level, "message": message}
 
 
